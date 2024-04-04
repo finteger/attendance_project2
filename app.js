@@ -15,19 +15,53 @@ app.set('views', './views');
 //Middleware (use)
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
 
 const url = `mongodb+srv://fintegerside:Password@cluster0.98mw1a5.mongodb.net/`;
 
 
 app.get('/', (req, res) =>{
- 
-  const email = req.body.email;
-  const password = req.body.password;
-  
-
   res.render('login');
 });
 
+app.get('/home', (req, res) => {
+  res.render('home');
+})
+
+
+app.post('/' , async (req, res) => {
+
+  const email = req.body.email;
+  const password = req.body.password;
+  const secretKey = 'my_secret_key';
+
+  //Find user in the database by email
+  const user =  await Student.findOne({email});
+
+  if(!user){
+    //User not found
+    res.status(404).send('User not found');
+    return;
+  }
+
+  //Creating and signing a JWT
+  const unique = user._id.toString();
+
+  //Create a jwt
+  const token = jwt.sign(unique, secretKey);
+  
+  //Stuff the token (jwt) inside the cookie and issue it
+   res.cookie('jwt', token, {maxAge: 5 * 60 * 1000, httpOnly: true});
+
+   bcrypt.compare(password, user.password, (err, result) =>{
+
+    if(result){
+        res.redirect('home');
+    } else {
+      res.send('Password does not match our records. Please try again')
+    }
+  });
+});
 
 
 app.post('/register', (req, res) =>{
