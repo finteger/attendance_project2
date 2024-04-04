@@ -37,10 +37,10 @@ app.post('/register', (req, res) =>{
   const user = Student.findOne({email});
 
   //Check if username already exists.  
-  if(user){
-      res.status(400).send('Username already exists.  Please try again');
-      return;
-  }
+  //if(user){
+    //  res.status(400).send('Username already exists.  Please try again');
+     // return;
+  //}
 
   //Check if the confirm password equals the password
   if(password !== confirmPassword){
