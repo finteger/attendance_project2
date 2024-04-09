@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const Student = require('./student.js');
+const Record = require('./record.js');
 const app = express();
 
 
@@ -24,9 +25,6 @@ app.get('/', (req, res) =>{
   res.render('login');
 });
 
-app.get('/home', (req, res) => {
-  res.render('attendance');
-})
 
 
 app.post('/' , async (req, res) => {
@@ -111,6 +109,17 @@ mongoose.connect(url)
 });
 
 
+
+app.get('/home', async (req, res) =>{
+
+  const students = await Record.find({});
+
+  //Using max method with cascade operator to perform function on all students
+  const maxAttendanceCount = Math.max(...students.map(student => student.attendanceCount));
+
+  res.render('attendance.ejs', {students, maxAttendanceCount});
+
+});
 
 
 
