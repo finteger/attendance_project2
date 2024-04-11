@@ -143,6 +143,34 @@ app.get('/home', async (req, res) =>{
 });
 
 
+app.post('/update-student', (req, res) =>{
+
+  const attendanceDate = req.body;
+  const length = req.body.attendance ? req.body.attendance.length: 0;
+
+  try {
+    for(let i = 0; i < length; i++){
+
+      const studentId = req.body.attendance[i];
+    
+
+
+
+
+    }
+
+
+  } catch(err){
+
+
+
+
+  }
+
+
+});
+
+
 
 const PORT = process.env.PORT || 3000;
 
