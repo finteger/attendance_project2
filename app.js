@@ -150,6 +150,8 @@ app.post('/update-student', async (req, res) =>{
   const attendanceDate  = req.body.attendanceDate;
   const length = req.body.attendance ? req.body.attendance.length: 0;
 
+  console.log(req.body.email2);
+
   try {
       for(let i = 0; i < length; i++){
 
@@ -162,7 +164,7 @@ app.post('/update-student', async (req, res) =>{
           },
           {new: true},
         );
-        res.status(200).redirect('/home');
+       return res.status(200).redirect('/home');
       }
   } catch(err){
      res.status(500).send("An unknown error has occurred while updating student records.");

@@ -92,6 +92,7 @@
                                 <label>
                                 <%= record.name %>
                                 <input type="checkbox" name="attendance[]" value="<%= record._id %>">
+                                <input type="hidden" name="email2" value="<%= record.email %>">
 
                                 </label>
                             </li>
@@ -117,25 +118,6 @@
 
 </body>
 
-<script>    
-    const checkboxes = document.querySelectorAll('input[type=checkbox]');
-
-
-    checkboxes.forEach((checkbox) =>{
-        checkbox.addEventListener('change', () =>{
-                    
-            const hiddenInput = checkbox.parentNode.querySelector('input[type="hidden"]');
-
-            if(checkbox.checked) {
-                hiddenInput.value = checkbox.value;
-            } else {
-                hiddenInput.value;
-            }
-
-
-        });
-    });
-</script>   
 
 
 
