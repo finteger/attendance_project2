@@ -36,10 +36,11 @@ function authenticateToken(req, res, next){
 
       jwt.verify(token, secretKey, (err, decoded) => {
 
-          if(err) return res.status(401).send('Invalid Token');
+          if(err) {
+            return res.status(401).send('Invalid Token');
+          }
 
-
-          req.userId = decoded;
+            req.userId = decoded;
 
           next();
       });
