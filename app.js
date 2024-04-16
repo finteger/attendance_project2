@@ -45,7 +45,7 @@ function authenticateToken(req, res, next){
           next();
       })
     } else {
-      res.status(401).send('You are not authorized to access this page!');
+      res.status(401).render('401');
     }
 }
 
@@ -163,9 +163,10 @@ app.post('/addstudent', (req, res) =>{
 app.post('/deletestudent', async (req, res) =>{
 
   const studentName = req.body.name;
+  const trimmedName = studentName.trim();
 
   try{
-    const result = await Record.deleteOne({ name: studentName});
+    const result = await Record.deleteOne({name: trimmedName});
 
     if(result.deletedCount === 0){
       res.status(404).send('User does not exist.  Try again.');
@@ -250,6 +251,24 @@ app.post('/reset', async (req, res) =>{
     res.status(500).send("An unknown error has occurred while updating student records.");
 
   }
+});
+
+app.post('/logout', (req, res) =>{
+
+  res.clearCookie('jwt');
+
+  req.session.userId = null;
+
+  req.session.destroy((err) =>{
+
+    if(err){
+      res.status(500).send('Internal Server Error');
+    } else{
+      res.redirect('/home');
+    }
+
+  });
+
 });
 
 
