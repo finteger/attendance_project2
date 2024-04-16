@@ -19,6 +19,7 @@ app.set('views', './views');
 //Middleware (use)
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.json());
 app.use(cookieParser());
 app.use(session({
   secret: secretKey,
@@ -201,13 +202,14 @@ app.get('/home', authenticateToken,  async (req, res) =>{
 app.post('/update-student', async (req, res) =>{
 
   const attendanceDate  = req.body.attendanceDate;
-  const length = req.body.attendance ? req.body.attendance.length: 0;
-
+  const length = req.body.attendance ? req.body.attendance.length : 0;
 
   try {
       for(let i = 0; i < length; i++){
 
         const studentId = req.body.attendance[i];
+
+
         const result = await Record.findByIdAndUpdate(
           studentId,
           {
@@ -216,23 +218,46 @@ app.post('/update-student', async (req, res) =>{
           },
           {new: true},
         );
-       return res.status(200).redirect('/home');
+       
       }
+     return res.status(200).redirect('/home');
   } catch(err){
      res.status(500).send("An unknown error has occurred while updating student records.");
   }
 });
 
-//app.get('/api/v2', async (req, res) => {
-  //try {
-   // const records = await Record.find({});
-   // const formatted = JSON.stringify(records);
-   // res.send(formatted);
-  //} catch (error) {
-   // console.error("Error fetching records:", error);
-   // res.status(500).send("Error fetching records");
-  //}
-//});
+app.get('/api/v2', async (req, res) => {
+  try {
+    const records = await Record.find({});
+    const formatted = JSON.stringify(records);
+   res.send(formatted);
+  } catch (error) {
+   console.error("Error fetching records:", error);
+   res.status(500).send("Error fetching records");
+  }
+});
+
+app.post('/api/v2', async (req, res) =>{
+
+  try{
+    const {name, email} = req.body;
+
+    //Create the new student record
+    const student = new Record({
+      name: name,
+      email: email,
+    });
+
+    await student.save();
+    res.status(200).json({message: 'Student added successfully', student: student});
+  }catch(error){
+    res.status(500).json({error: 'Am error occurred while adding new student record.'});
+ }
+
+});
+
+
+
 
 app.post('/reset', async (req, res) =>{
 
@@ -264,7 +289,7 @@ app.post('/logout', (req, res) =>{
     if(err){
       res.status(500).send('Internal Server Error');
     } else{
-      res.redirect('/home');
+      res.redirect('/');
     }
 
   });
