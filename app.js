@@ -43,7 +43,9 @@ function authenticateToken(req, res, next){
             req.userId = decoded;
 
           next();
-      });
+      })
+    } else {
+      res.status(401).send('You are not authorized to access this page!');
     }
 }
 
