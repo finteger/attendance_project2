@@ -249,6 +249,7 @@ app.post('/api/v2', async (req, res) =>{
     });
 
     await student.save();
+    
     res.status(200).json({message: 'Student added successfully', student: student});
   }catch(error){
     res.status(500).json({error: 'Am error occurred while adding new student record.'});
